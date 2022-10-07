@@ -293,6 +293,7 @@ class DDPM(pl.LightningModule):
         return loss
 
     def p_losses(self, x_start, t, noise=None):
+        print("p_losses: self, x_start, t, noise=None")
         noise = default(noise, lambda: torch.randn_like(x_start))
         x_noisy = self.q_sample(x_start=x_start, t=t, noise=noise)
         model_out = self.model(x_noisy, t)
@@ -322,6 +323,7 @@ class DDPM(pl.LightningModule):
         return loss, loss_dict
 
     def forward(self, x, *args, **kwargs):
+        print("forward:self, x, *args, **kwargs ")
         # b, c, h, w, device, img_size, = *x.shape, x.device, self.image_size
         # assert h == img_size and w == img_size, f'height and width of image must be {img_size}'
         t = torch.randint(0, self.num_timesteps, (x.shape[0],), device=self.device).long()
@@ -869,6 +871,7 @@ class LatentDiffusion(DDPM):
         return loss
 
     def forward(self, x, c, *args, **kwargs):
+        print("forward:No t... self, x, c, *args, **kwargs ")
         t = torch.randint(0, self.num_timesteps, (x.shape[0],), device=self.device).long()
         if self.model.conditioning_key is not None:
             assert c is not None
@@ -1015,6 +1018,7 @@ class LatentDiffusion(DDPM):
         return mean_flat(kl_prior) / np.log(2.0)
 
     def p_losses(self, x_start, cond, t, noise=None):
+        print("p_losses: self, x_start, cond, t, noise=None")
         noise = default(noise, lambda: torch.randn_like(x_start))
         x_noisy = self.q_sample(x_start=x_start, t=t, noise=noise)
         model_output = self.apply_model(x_noisy, t, cond)
