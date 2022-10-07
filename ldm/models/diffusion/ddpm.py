@@ -895,12 +895,14 @@ class LatentDiffusion(DDPM):
             # hybrid case, cond is exptected to be a dict
             pass
         else:
+            print("apply_model: Not Dict ")
             if not isinstance(cond, list):
                 cond = [cond]
             key = 'c_concat' if self.model.conditioning_key == 'concat' else 'c_crossattn'
             cond = {key: cond}
 
         if hasattr(self, "split_input_params"):
+            print("apply_model: split_input_paramst")
             assert len(cond) == 1  # todo can only deal with one conditioning atm
             assert not return_ids  
             ks = self.split_input_params["ks"]  # eg. (128, 128)
@@ -985,9 +987,11 @@ class LatentDiffusion(DDPM):
             x_recon = fold(o) / normalization
 
         else:
+            print("apply_model: self.model")
             x_recon = self.model(x_noisy, t, **cond)
 
         if isinstance(x_recon, tuple) and not return_ids:
+            print("apply_model: isinstance(x_recon, tuple) and not return_ids:")
             return x_recon[0]
         else:
             return x_recon
