@@ -1412,17 +1412,22 @@ class DiffusionWrapper(pl.LightningModule):
         print("Forward - Diffusion Wrapper")
         if self.conditioning_key is None:
             out = self.diffusion_model(x, t)
+            print("Forward - Conditioning key None")
         elif self.conditioning_key == 'concat':
+            print("Forward - Concat")
             xc = torch.cat([x] + c_concat, dim=1)
             out = self.diffusion_model(xc, t)
         elif self.conditioning_key == 'crossattn':
+            print("Forward - Cross Attention")
             cc = torch.cat(c_crossattn, 1)
             out = self.diffusion_model(x, t, context=cc)
         elif self.conditioning_key == 'hybrid':
+            print("Forward - Hybrid")
             xc = torch.cat([x] + c_concat, dim=1)
             cc = torch.cat(c_crossattn, 1)
             out = self.diffusion_model(xc, t, context=cc)
         elif self.conditioning_key == 'adm':
+            print("Forward - Adm")
             cc = c_crossattn[0]
             out = self.diffusion_model(x, t, y=cc)
         else:
