@@ -52,6 +52,7 @@ class Upsample(nn.Module):
                                         padding=1)
 
     def forward(self, x):
+        print("Unsample model.py")
         x = torch.nn.functional.interpolate(x, scale_factor=2.0, mode="nearest")
         if self.with_conv:
             x = self.conv(x)
@@ -71,6 +72,7 @@ class Downsample(nn.Module):
                                         padding=0)
 
     def forward(self, x):
+        print("Downsample model.py")
         if self.with_conv:
             pad = (0,1,0,1)
             x = torch.nn.functional.pad(x, pad, mode="constant", value=0)
@@ -120,6 +122,7 @@ class ResnetBlock(nn.Module):
                                                     padding=0)
 
     def forward(self, x, temb):
+        print("ResnetBlock model.py")
         h1 = x
         h2 = self.norm1(h1)
         del h1
@@ -188,6 +191,7 @@ class AttnBlock(nn.Module):
                                         padding=0)
 
     def forward(self, x):
+        print("Attention Block model.py")
         h_ = x
         h_ = self.norm(h_)
         q1 = self.q(h_)
@@ -252,6 +256,8 @@ class AttnBlock(nn.Module):
 
 
 def make_attn(in_channels, attn_type="vanilla"):
+    print("Make Attention model.py")
+
     assert attn_type in ["vanilla", "linear", "none"], f'attn_type {attn_type} unknown'
     print(f"making attention of type '{attn_type}' with {in_channels} in_channels")
     if attn_type == "vanilla":
@@ -482,6 +488,7 @@ class Encoder(nn.Module):
                                         padding=1)
 
     def forward(self, x):
+        print("forward(self, x) model.py")
         # timestep embedding
         temb = None
 
@@ -583,6 +590,7 @@ class Decoder(nn.Module):
                                         padding=1)
 
     def forward(self, z):
+        print("forward(self, z) in model.py")
         #assert z.shape[1:] == self.z_shape[1:]
         self.last_z_shape = z.shape
 
@@ -665,6 +673,9 @@ class SimpleDecoder(nn.Module):
                                         padding=1)
 
     def forward(self, x):
+
+        print("Simple decoder in python.py")
+
         for i, layer in enumerate(self.model):
             if i in [1,2,3]:
                 x = layer(x, None)
@@ -712,6 +723,7 @@ class UpsampleDecoder(nn.Module):
                                         padding=1)
 
     def forward(self, x):
+        print ("UpsampleDecoder in model.py")
         # upsampling
         h = x
         for k, i_level in enumerate(range(self.num_resolutions)):
@@ -751,6 +763,8 @@ class LatentRescaler(nn.Module):
                                   )
 
     def forward(self, x):
+        print("LatentRescaler in model.py")
+
         x = self.conv_in(x)
         for block in self.res_block1:
             x = block(x, None)
@@ -776,6 +790,7 @@ class MergedRescaleEncoder(nn.Module):
                                        mid_channels=intermediate_chn, out_channels=out_ch, depth=rescale_module_depth)
 
     def forward(self, x):
+        print("MergedRescaleEncoder in model.py")
         x = self.encoder(x)
         x = self.rescaler(x)
         return x
@@ -793,6 +808,7 @@ class MergedRescaleDecoder(nn.Module):
                                        out_channels=tmp_chn, depth=rescale_module_depth)
 
     def forward(self, x):
+        print(" MergedRescaleDecoder in model.py")
         x = self.rescaler(x)
         x = self.decoder(x)
         return x
@@ -812,6 +828,7 @@ class Upsampler(nn.Module):
                                ch_mult=[ch_mult for _ in range(num_blocks)])
 
     def forward(self, x):
+        print("Upsampler in model.py")
         x = self.rescaler(x)
         x = self.decoder(x)
         return x
@@ -834,6 +851,7 @@ class Resize(nn.Module):
                                         padding=1)
 
     def forward(self, x, scale_factor=1.0):
+        print("Resize in model.py")
         if scale_factor==1.0:
             return x
         else:
@@ -893,6 +911,8 @@ class FirstStagePostProcessor(nn.Module):
         return  c
 
     def forward(self,x):
+        print("FirstStagePostProcessor in model.py")
+
         z_fs = self.encode_with_pretrained(x)
         z = self.proj_norm(z_fs)
         z = self.proj(z)
