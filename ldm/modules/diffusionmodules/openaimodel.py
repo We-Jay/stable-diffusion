@@ -80,10 +80,13 @@ class TimestepEmbedSequential(nn.Sequential, TimestepBlock):
     def forward(self, x, emb, context=None):
         for layer in self:
             if isinstance(layer, TimestepBlock):
+                print("isinstance(layer, TimestepBlock) TimestepEmbedSequential in openaimodel.py")
                 x = layer(x, emb)
             elif isinstance(layer, SpatialTransformer):
+                print("isinstance(layer, SpatialTransformerBlock) TimestepEmbedSequential in openaimodel.py")
                 x = layer(x, context)
             else:
+                print("None of Above layer in TimestepEmbedSequential in openaimodel.py")
                 x = layer(x)
         return x
 
@@ -716,6 +719,8 @@ class UNetModel(nn.Module):
         :param y: an [N] Tensor of labels, if class-conditional.
         :return: an [N x C x ...] Tensor of outputs.
         """
+        print("UnetModel forward in oopenaimodel.py")
+
         assert (y is not None) == (
             self.num_classes is not None
         ), "must specify y if and only if the model is class-conditional"
@@ -724,21 +729,25 @@ class UNetModel(nn.Module):
         emb = self.time_embed(t_emb)
 
         if self.num_classes is not None:
+            print("self.num_classes is not None in openaimodel.py")
             assert y.shape == (x.shape[0],)
             emb = emb + self.label_emb(y)
 
         h = x.type(self.dtype)
         for module in self.input_blocks:
+            print("self.input_block in openaimodel.py")
             h = module(h, emb, context)
             hs.append(h)
         h = self.middle_block(h, emb, context)
         for module in self.output_blocks:
+            print("self.output_block in openaimodel.py")
             h = th.cat([h, hs.pop()], dim=1)
             h = module(h, emb, context)
         h = h.type(x.dtype)
         if self.predict_codebook_ids:
             return self.id_predictor(h)
         else:
+            print("Not Codebook ids and returning: in openaimodel.py")
             return self.out(h)
 
 
