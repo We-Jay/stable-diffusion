@@ -1410,6 +1410,9 @@ class DiffusionWrapper(pl.LightningModule):
 
     def forward(self, x, t, c_concat: list = None, c_crossattn: list = None):
         print("Forward - Diffusion Wrapper")
+        print(f"c_concat: {c_concat} ")
+        print(f"c_crossattn: {c_crossattn}")
+        
         if self.conditioning_key is None:
             out = self.diffusion_model(x, t)
             print("Forward - Conditioning key None")

@@ -363,6 +363,7 @@ class Model(nn.Module):
                                         padding=1)
 
     def forward(self, x, t=None, context=None):
+        printf("forward method of model.py with x, t, context")
         #assert x.shape[2] == x.shape[3] == self.resolution
         if context is not None:
             # assume aligned context, cat along channel axis
