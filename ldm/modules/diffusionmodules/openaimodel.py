@@ -49,6 +49,7 @@ class AttentionPool2d(nn.Module):
         self.attention = QKVAttention(self.num_heads)
 
     def forward(self, x):
+        print("AttentionPool2D forward ... in openaimodel.py")
         b, c, *_spatial = x.shape
         x = x.reshape(b, c, -1)  # NC(HW)
         x = th.cat([x.mean(dim=-1, keepdim=True), x], dim=-1)  # NC(HW+1)
@@ -66,6 +67,7 @@ class TimestepBlock(nn.Module):
 
     @abstractmethod
     def forward(self, x, emb):
+        print("TimestepBlock forward ... in openaimodel.py")
         """
         Apply the module to `x` given `emb` timestep embeddings.
         """
@@ -78,6 +80,7 @@ class TimestepEmbedSequential(nn.Sequential, TimestepBlock):
     """
 
     def forward(self, x, emb, context=None):
+        print("TimestepEmbedSequential forward ... in openaimodel.py")
         for layer in self:
             if isinstance(layer, TimestepBlock):
                 print("isinstance(layer, TimestepBlock) TimestepEmbedSequential in openaimodel.py")
@@ -110,6 +113,7 @@ class Upsample(nn.Module):
             self.conv = conv_nd(dims, self.channels, self.out_channels, 3, padding=padding)
 
     def forward(self, x):
+        print("Upsample forward ... in openaimodel.py")
         assert x.shape[1] == self.channels
         if self.dims == 3:
             x = F.interpolate(
@@ -131,6 +135,7 @@ class TransposedUpsample(nn.Module):
         self.up = nn.ConvTranspose2d(self.channels,self.out_channels,kernel_size=ks,stride=2)
 
     def forward(self,x):
+        print("TransposedUpsample forward ... in openaimodel.py")
         return self.up(x)
 
 
@@ -159,6 +164,7 @@ class Downsample(nn.Module):
             self.op = avg_pool_nd(dims, kernel_size=stride, stride=stride)
 
     def forward(self, x):
+        print("Downsample forward ... in openaimodel.py")
         assert x.shape[1] == self.channels
         return self.op(x)
 
@@ -244,6 +250,7 @@ class ResBlock(TimestepBlock):
             self.skip_connection = conv_nd(dims, channels, self.out_channels, 1)
 
     def forward(self, x, emb):
+        print("ResBlock forward ... in openaimodel.py")
         """
         Apply the block to a Tensor, conditioned on a timestep embedding.
         :param x: an [N x C x ...] Tensor of features.
@@ -315,6 +322,7 @@ class AttentionBlock(nn.Module):
         self.proj_out = zero_module(conv_nd(1, channels, channels, 1))
 
     def forward(self, x):
+        print("AttentionBlock forward ... in openaimodel.py")
         return checkpoint(self._forward, (x,), self.parameters(), True)   # TODO: check checkpoint usage, is True # TODO: fix the .half call!!!
         #return pt_checkpoint(self._forward, x)  # pytorch
 
@@ -357,6 +365,7 @@ class QKVAttentionLegacy(nn.Module):
         self.n_heads = n_heads
 
     def forward(self, qkv):
+        print("QKVAttentionLegacy forward ... in openaimodel.py")
         """
         Apply QKV attention.
         :param qkv: an [N x (H * 3 * C) x T] tensor of Qs, Ks, and Vs.
@@ -389,6 +398,7 @@ class QKVAttention(nn.Module):
         self.n_heads = n_heads
 
     def forward(self, qkv):
+        print("QKVAttention forward ... in openaimodel.py")
         """
         Apply QKV attention.
         :param qkv: an [N x (3 * H * C) x T] tensor of Qs, Ks, and Vs.
