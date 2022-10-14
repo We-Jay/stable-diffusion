@@ -729,25 +729,27 @@ class UNetModel(nn.Module):
         emb = self.time_embed(t_emb)
 
         if self.num_classes is not None:
-            print("self.num_classes is not None in openaimodel.py")
+            print("Unet forward: self.num_classes is not None ...in openaimodel.py")
             assert y.shape == (x.shape[0],)
             emb = emb + self.label_emb(y)
 
         h = x.type(self.dtype)
         for module in self.input_blocks:
-            print("self.input_block in openaimodel.py")
+            print("Unet forward: Input Block ...in openaimodel.py")
             h = module(h, emb, context)
             hs.append(h)
+        print("Unet forward: Middle Block ...in openaimodel.py")
         h = self.middle_block(h, emb, context)
         for module in self.output_blocks:
-            print("self.output_block in openaimodel.py")
+            print("Unet forward: Output Block in openaimodel.py")
             h = th.cat([h, hs.pop()], dim=1)
             h = module(h, emb, context)
         h = h.type(x.dtype)
         if self.predict_codebook_ids:
+            print("Unet forward: Returning id_predictor(h):.... in openaimodel.py")
             return self.id_predictor(h)
         else:
-            print("Not Codebook ids and returning: in openaimodel.py")
+            print("Unet forward: Returning out(h):.... in openaimodel.py")
             return self.out(h)
 
 
@@ -945,6 +947,7 @@ class EncoderUNetModel(nn.Module):
         self.middle_block.apply(convert_module_to_f32)
 
     def forward(self, x, timesteps):
+        print("Encoder Unet Model: forward ... in openaimodel.py")
         """
         Apply the model to an input batch.
         :param x: an [N x C x ...] Tensor of inputs.
