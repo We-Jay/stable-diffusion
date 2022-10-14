@@ -87,6 +87,7 @@ class LinearAttention(nn.Module):
         self.to_out = nn.Conv2d(hidden_dim, dim, 1)
 
     def forward(self, x):
+        print("Linear Attention .... attention.py")
         b, c, h, w = x.shape
         qkv = self.to_qkv(x)
         q, k, v = rearrange(qkv, 'b (qkv heads c) h w -> qkv b heads c (h w)', heads = self.heads, qkv=3)
@@ -125,6 +126,7 @@ class SpatialSelfAttention(nn.Module):
                                         padding=0)
 
     def forward(self, x):
+        print("Spatial Self-Attention .... attention.py")
         h_ = x
         h_ = self.norm(h_)
         q = self.q(h_)
@@ -169,6 +171,7 @@ class CrossAttention(nn.Module):
         )
 
     def forward(self, x, context=None, mask=None):
+        print("Cross Attention .... attention.py")
         h = self.heads
 
         q_in = self.to_q(x)
@@ -239,6 +242,7 @@ class BasicTransformerBlock(nn.Module):
         return checkpoint(self._forward, (x, context), self.parameters(), self.checkpoint)
 
     def _forward(self, x, context=None):
+        print("Basic Transformer Block .... attention.py")
         x = self.attn1(self.norm1(x)) + x
         x = self.attn2(self.norm2(x), context=context) + x
         x = self.ff(self.norm3(x)) + x
@@ -278,7 +282,7 @@ class SpatialTransformer(nn.Module):
                                               padding=0))
 
     def forward(self, x, context=None):
-        print("SpatialTransformer in attention.py")
+        print("Spatial Transformer .... attention.py")
         # note: if no context is given, cross-attention defaults to self-attention
         b, c, h, w = x.shape
         x_in = x
