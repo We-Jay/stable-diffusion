@@ -83,13 +83,13 @@ class TimestepEmbedSequential(nn.Sequential, TimestepBlock):
         print("TimestepEmbedSequential forward ... in openaimodel.py")
         for layer in self:
             if isinstance(layer, TimestepBlock):
-                print("isinstance(layer, TimestepBlock) TimestepEmbedSequential in openaimodel.py")
+                print(" Timed Laye, TimestepBlock in TimestepEmbedSequential ... in openaimodel.py")
                 x = layer(x, emb)
             elif isinstance(layer, SpatialTransformer):
-                print("isinstance(layer, SpatialTransformerBlock) TimestepEmbedSequential in openaimodel.py")
+                print("Context Layer, SpatialTransformerBlock in  TimestepEmbedSequential ... in openaimodel.py")
                 x = layer(x, context)
             else:
-                print("None of Above layer in TimestepEmbedSequential in openaimodel.py")
+                print("Plain layer,  TimestepEmbedSequential in openaimodel.py")
                 x = layer(x)
         return x
 
@@ -480,6 +480,55 @@ class UNetModel(nn.Module):
         n_embed=None,                     # custom support for prediction of discrete ids into codebook of first stage vq model
         legacy=True,
     ):
+
+        print(f"image_size,
+        in_channels,
+        model_channels,
+        out_channels,
+        num_res_blocks,
+        attention_resolutions,
+        dropout=0,
+        channel_mult=(1, 2, 4, 8),
+        conv_resample=True,
+        dims=2,
+        num_classes=None,
+        use_checkpoint=False,
+        use_fp16=False,
+        num_heads=-1,
+        num_head_channels=-1,
+        num_heads_upsample=-1,
+        use_scale_shift_norm=False,
+        resblock_updown=False,
+        use_new_attention_order=False,
+        use_spatial_transformer=False,    # custom transformer support
+        transformer_depth=1,              # custom transformer support
+        context_dim=None,                 # custom transformer support
+        n_embed=None,                     # custom support for prediction of discrete ids into codebook of first stage vq model
+        legacy=True,{image_size,
+        in_channels,
+        model_channels,
+        out_channels,
+        num_res_blocks,
+        attention_resolutions,
+        dropout,
+        channel_mult,
+        conv_resample,
+        dims,
+        num_classes,
+        use_checkpoint,
+        use_fp16,
+        num_heads,
+        num_head_channels,
+        num_heads_upsample,
+        use_scale_shift_norm,
+        resblock_updown,
+        use_new_attention_order,
+        use_spatial_transformer,    # custom transformer support
+        transformer_depth,              # custom transformer support
+        context_dim,                 # custom transformer support
+        n_embed,                     # custom support for prediction of discrete ids into codebook of first stage vq model
+        legacy}")
+
         super().__init__()
         if use_spatial_transformer:
             assert context_dim is not None, 'Fool!! You forgot to include the dimension of your cross-attention conditioning...'
