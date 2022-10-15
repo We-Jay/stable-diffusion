@@ -42,6 +42,7 @@ class AttentionPool2d(nn.Module):
         output_dim: int = None,
     ):
         super().__init__()
+        print("Instantiated AttentionPool2d....in openaimodel.py")
         self.positional_embedding = nn.Parameter(th.randn(embed_dim, spacial_dim ** 2 + 1) / embed_dim ** 0.5)
         self.qkv_proj = conv_nd(1, embed_dim, 3 * embed_dim, 1)
         self.c_proj = conv_nd(1, embed_dim, output_dim or embed_dim, 1)
@@ -83,7 +84,7 @@ class TimestepEmbedSequential(nn.Sequential, TimestepBlock):
         print("TimestepEmbedSequential forward ... in openaimodel.py")
         for layer in self:
             if isinstance(layer, TimestepBlock):
-                print(" Timed Laye, TimestepBlock in TimestepEmbedSequential ... in openaimodel.py")
+                print(" Timed Layer, TimestepBlock in TimestepEmbedSequential ... in openaimodel.py")
                 x = layer(x, emb)
             elif isinstance(layer, SpatialTransformer):
                 print("Context Layer, SpatialTransformerBlock in  TimestepEmbedSequential ... in openaimodel.py")
@@ -105,6 +106,7 @@ class Upsample(nn.Module):
 
     def __init__(self, channels, use_conv, dims=2, out_channels=None, padding=1):
         super().__init__()
+        print("Instantiated Upsample Module .... in openaimodel.py")
         self.channels = channels
         self.out_channels = out_channels or channels
         self.use_conv = use_conv
@@ -129,6 +131,7 @@ class TransposedUpsample(nn.Module):
     'Learned 2x upsampling without padding'
     def __init__(self, channels, out_channels=None, ks=5):
         super().__init__()
+        print("Instantiate TransposedUpsample Module ... in openaimodel.py")
         self.channels = channels
         self.out_channels = out_channels or channels
 
@@ -150,6 +153,7 @@ class Downsample(nn.Module):
 
     def __init__(self, channels, use_conv, dims=2, out_channels=None,padding=1):
         super().__init__()
+        print("Instantiate Downsample Module ... in openaimodel.py")
         self.channels = channels
         self.out_channels = out_channels or channels
         self.use_conv = use_conv
@@ -199,6 +203,7 @@ class ResBlock(TimestepBlock):
         down=False,
     ):
         super().__init__()
+        print("Instantiate ResBlock ... in openaimodel.py")
         self.channels = channels
         self.emb_channels = emb_channels
         self.dropout = dropout
@@ -301,6 +306,7 @@ class AttentionBlock(nn.Module):
         use_new_attention_order=False,
     ):
         super().__init__()
+        print("Instantiate AttentionBlock ... in openaimodule.py")
         self.channels = channels
         if num_head_channels == -1:
             self.num_heads = num_heads
@@ -362,6 +368,7 @@ class QKVAttentionLegacy(nn.Module):
 
     def __init__(self, n_heads):
         super().__init__()
+        print("Instantiate QKVAttentionLegacy Module ... in openaimodel.py")
         self.n_heads = n_heads
 
     def forward(self, qkv):
@@ -395,6 +402,7 @@ class QKVAttention(nn.Module):
 
     def __init__(self, n_heads):
         super().__init__()
+        print("Instantiate QKVAttention Module ... in openaimodel.py")
         self.n_heads = n_heads
 
     def forward(self, qkv):
@@ -484,7 +492,7 @@ class UNetModel(nn.Module):
         print(f'''image_size{image_size}, in_channels{in_channels},
         model_channels{model_channels} , out_channels{out_channels},
         num_res_blocks{num_res_blocks},
-        num_res_blocks{num_res_blocks},
+        attention_resolutions{attention_resolutions},
         dropout{dropout},
         channel_mult=(1, 2, 4, 8){channel_mult},
         conv_resample=True{conv_resample},
