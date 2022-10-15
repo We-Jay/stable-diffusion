@@ -481,53 +481,28 @@ class UNetModel(nn.Module):
         legacy=True,
     ):
 
-        print(f"image_size,
-        in_channels,
-        model_channels,
-        out_channels,
-        num_res_blocks,
-        attention_resolutions,
-        dropout=0,
-        channel_mult=(1, 2, 4, 8),
-        conv_resample=True,
-        dims=2,
-        num_classes=None,
-        use_checkpoint=False,
-        use_fp16=False,
-        num_heads=-1,
-        num_head_channels=-1,
-        num_heads_upsample=-1,
-        use_scale_shift_norm=False,
-        resblock_updown=False,
-        use_new_attention_order=False,
-        use_spatial_transformer=False,    # custom transformer support
-        transformer_depth=1,              # custom transformer support
-        context_dim=None,                 # custom transformer support
-        n_embed=None,                     # custom support for prediction of discrete ids into codebook of first stage vq model
-        legacy=True,{image_size,
-        in_channels,
-        model_channels,
-        out_channels,
-        num_res_blocks,
-        attention_resolutions,
-        dropout,
-        channel_mult,
-        conv_resample,
-        dims,
-        num_classes,
-        use_checkpoint,
-        use_fp16,
-        num_heads,
-        num_head_channels,
-        num_heads_upsample,
-        use_scale_shift_norm,
-        resblock_updown,
-        use_new_attention_order,
-        use_spatial_transformer,    # custom transformer support
-        transformer_depth,              # custom transformer support
-        context_dim,                 # custom transformer support
-        n_embed,                     # custom support for prediction of discrete ids into codebook of first stage vq model
-        legacy}")
+        print(f'''image_size{image_size}, in_channels{in_channels},
+        model_channels{model_channels} , out_channels{out_channels},
+        num_res_blocks{num_res_blocks},
+        num_res_blocks{num_res_blocks},
+        dropout{dropout},
+        channel_mult=(1, 2, 4, 8){channel_mult},
+        conv_resample=True{conv_resample},
+        dims=2{dims},
+        num_classes=None{num_classes},
+        use_checkpoint=False{use_checkpoint},
+        use_fp16=False{use_fp16},
+        num_heads=-1{num_heads},
+        num_head_channels=-1{num_head_channels},
+        num_heads_upsample=-1{num_heads_upsample},
+        use_scale_shift_norm=False{use_scale_shift_norm},
+        resblock_updown=False{resblock_updown},
+        use_new_attention_order=False{use_new_attention_order},
+        use_spatial_transformer=False{use_spatial_transformer},    
+        transformer_depth=1{transformer_depth},             
+        context_dim=None{context_dim},                
+        n_embed=None{n_embed},                    
+        legacy=True{legacy}''')
 
         super().__init__()
         if use_spatial_transformer:
