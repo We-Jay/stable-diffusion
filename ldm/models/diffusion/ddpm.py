@@ -863,6 +863,7 @@ class LatentDiffusion(DDPM):
             else:
                 return self.first_stage_model.encode(x)
         else:
+            print("encode_first_stage ... ddpm.py")
             return self.first_stage_model.encode(x)
 
     def shared_step(self, batch, **kwargs):
