@@ -776,22 +776,30 @@ class UNetModel(nn.Module):
             emb = emb + self.label_emb(y)
 
         h = x.type(self.dtype)
+        print(f"Start Input h.shape  = {h.shape}")
         for module in self.input_blocks:
             print("Unet forward: Input Block ...in openaimodel.py")
             h = module(h, emb, context)
+            print(f"Input Block Input h.shape  = {h.shape}")
             hs.append(h)
         print("Unet forward: Middle Block ...in openaimodel.py")
         h = self.middle_block(h, emb, context)
+        print(f"Post middle Input h.shape  = {h.shape}")
         for module in self.output_blocks:
             print("Unet forward: Output Block in openaimodel.py")
+            #
             h = th.cat([h, hs.pop()], dim=1)
+            print(f"Post Concatinate Input h.shape  = {h.shape}")
             h = module(h, emb, context)
+            print(f"Output Block Input h.shape  = {h.shape}")
         h = h.type(x.dtype)
+        print(f"Output Final Input h.shape  = {h.shape}")
         if self.predict_codebook_ids:
             print("Unet forward: Returning id_predictor(h):.... in openaimodel.py")
             return self.id_predictor(h)
         else:
             print("Unet forward: Returning out(h):.... in openaimodel.py")
+            print(f"Output Block Out(h) h.shape  = {self.out(h).shape}")
             return self.out(h)
 
 
