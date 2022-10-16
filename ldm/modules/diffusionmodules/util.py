@@ -179,6 +179,10 @@ def timestep_embedding(timesteps, dim, max_period=10000, repeat_only=False):
 def zero_module(module):
     """
     Zero out the parameters of a module and return it.
+    # This is hack from FixUp Initialization. Where you initialize the last layers to zero, 
+    # so that they do not contribute initially to the loss term, basically a way to make gradients 
+    # flow to initial layers rather than the last layer learning everything.
+    # from Improving Denoising Diffusion Models 1
     """
     for p in module.parameters():
         p.detach().zero_()
